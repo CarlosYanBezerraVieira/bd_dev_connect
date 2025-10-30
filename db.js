@@ -8,8 +8,15 @@ const connectDB = async () => {
     return;
   }
 
+  if (!process.env.MONGO_URI) {
+    throw new Error("MONGO_URI não definida!");
+  }
+
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     isConnected = conn.connections[0].readyState === 1;
     console.log("✅ MongoDB conectado com sucesso");
   } catch (err) {
